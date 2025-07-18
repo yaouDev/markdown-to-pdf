@@ -11,4 +11,7 @@ RUN sed -i 's/\r$//' /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh
 
+#debug
+RUN ls -l / 
+
 ENTRYPOINT ["/entrypoint.sh"]
