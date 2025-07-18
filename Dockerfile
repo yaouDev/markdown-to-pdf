@@ -13,5 +13,7 @@ RUN chmod +x /entrypoint.sh
 
 #debug
 RUN ls -l / 
+# more debug
+RUN head -n 1 /entrypoint.sh | cat -v
 
 ENTRYPOINT ["/entrypoint.sh"]
