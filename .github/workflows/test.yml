@@ -39,7 +39,12 @@ jobs:
           mkdir -p images
           wget https://placehold.co/150x50/png -O images/placeholder.png
 
-
+      - name: Show action.yml content
+        run: |
+          echo "--- Contents of action.yml being read by runner: ---"
+          cat action.yml
+          echo "----------------------------------------------------"
+    
       - name: Run Markdown to PDF Action (Unified PDF)
         id: unified_pdf_run
         uses: yaouDev/markdown-to-pdf@wip
