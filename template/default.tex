@@ -72,17 +72,6 @@ $if(header-includes)$
 $header-includes$
 $endif$
 
-% --- IMPORTANT: Added for \pandocbounded support ---
-% Pandoc often uses commands like \pandocbounded for fenced divs/spans.
-% These typically require the 'framed' or 'mdframed' package.
-\usepackage{mdframed} % A robust package for framed boxes
-% You might also need to define the command if it's not handled by mdframed directly,
-% or if Pandoc's version is very specific.
-% A common minimal definition if mdframed doesn't implicitly handle it:
-% \providecommand{\pandocbounded}[1]{#1}
-% However, mdframed should usually integrate well.
-% --- End IMPORTANT ---
-
 % --- Custom Footer for Table of Contents ---
 % This section defines a custom footer that appears only on the Table of Contents page.
 % To remove or modify this footer, adjust the content within \fancyfoot[C]{...}
