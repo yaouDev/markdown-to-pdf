@@ -5,17 +5,7 @@ set -x # verbose debug
 
 echo "Starting Markdown to PDF conversion..."
 
-DOCUMENTS_DIR="${INPUT_DOCUMENTS-DIR}"
-IMAGES_DIR="${INPUT_IMAGES-DIR}"
-ARTIFACTS_DIR="${INPUT_ARTIFACTS-DIR}"
-PUSH_TO_REPOSITORY="${INPUT_PUSH-TO-REPOSITORY}"
-UNIFIED_PDF="${INPUT_UNIFIED-PDF}"
-INCLUDE_DATE="${INPUT_INCLUDE-DATE}"
-SAVE_VERSION="${INPUT_SAVE-VERSION}"
-BASE_FILE_NAME="${INPUT_BASE-FILE-NAME}"
-TEMPLATE_TEX="${INPUT_TEMPLATE-TEX}"
-
-# assign defaults - does defaults from action.yml work?
+# fallback incase action.yml mapping fails
 DOCUMENTS_DIR="${DOCUMENTS_DIR:-documents}"
 IMAGES_DIR="${IMAGES_DIR:-images}"
 ARTIFACTS_DIR="${ARTIFACTS_DIR:-artifacts}"
