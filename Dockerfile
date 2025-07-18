@@ -15,4 +15,6 @@ RUN sed -i 's/\r$//' /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh
 
+RUN env
+
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
