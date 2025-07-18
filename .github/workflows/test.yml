@@ -39,23 +39,10 @@ jobs:
           mkdir -p images
           wget https://placehold.co/150x50/png -O images/placeholder.png
 
-      - name: Debugging
-        run: |
-          echo "--- Inputs defined in workflow (before action call): ---"
-          echo "documents-dir: documents"
-          echo "images-dir: images"
-          echo "artifacts-dir: artifacts_unified"
-          echo "push-to-repository: true"
-          echo "unified-pdf: true"
-          echo "include-date: true"
-          echo "save-version: true"
-          echo "base-file-name: MyUnifiedDocument"
-          echo "template-tex: default_template"
-          echo "--------------------------------------------------------"
 
       - name: Run Markdown to PDF Action (Unified PDF)
         id: unified_pdf_run
-        uses: ./ 
+        uses: yaouDev/markdown-to-pdf@wip
         with:
           documents-dir: documents
           images-dir: images
