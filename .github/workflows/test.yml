@@ -38,12 +38,6 @@ jobs:
         run: |
           mkdir -p images
           wget https://placehold.co/150x50/png -O images/placeholder.png
-
-      - name: Show action.yml content
-        run: |
-          echo "--- Contents of action.yml being read by runner: ---"
-          cat action.yml
-          echo "----------------------------------------------------"
     
       - name: Run Markdown to PDF Action (Unified PDF)
         id: unified_pdf_run
@@ -51,18 +45,15 @@ jobs:
         with:
           documents-dir: documents
           images-dir: images
-          artifacts-dir: artifacts_unified
-          push-to-repository: true
           unified-pdf: true
           include-date: true
-          save-version: true
           base-file-name: MyUnifiedDocument
           template-tex: default_template
 
       - name: Verify unified PDF output
         run: |
           echo "Generated PDF path: ${{ steps.unified_pdf_run.outputs.pdf-path }}"
-          ls -R artifacts_unified
+          ls -R artifacts
 
       - name: Run Markdown to PDF Action (Separate PDFs)
         id: separate_pdf_run
@@ -70,15 +61,12 @@ jobs:
         with:
           documents-dir: documents
           images-dir: images
-          artifacts-dir: artifacts_separate
-          push-to-repository: false # Set to false to avoid double push
           unified-pdf: false
           include-date: false # Test without date
-          save-version: false # Test without saving version
           base-file-name: MyDocument # Unused
           template-tex: default_template
 
       - name: Verify separate PDF outputs
         run: |
           echo "Generated PDF paths: ${{ steps.separate_pdf_run.outputs.pdf-path }}"
-          ls -R artifacts_separate
+          ls -R artifacts

@@ -5,7 +5,7 @@ WORKDIR /app
 
 # pandoc/latex uses default shell, but I want bash
 # im stoopid, pandoc/latex defaults to alpine
-RUN apk update && apk add bash git
+RUN apk update && apk add bash
 
 COPY entrypoint.sh /entrypoint.sh
 COPY template/ /app/template/
