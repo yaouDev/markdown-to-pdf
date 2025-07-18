@@ -13,7 +13,7 @@ UNIFIED_PDF=${INPUT_UNIFIED_PDF:-true}
 INCLUDE_DATE=${INPUT_INCLUDE_DATE:-true}
 SAVE_VERSION=${INPUT_SAVE_VERSION:-true}
 BASE_FILE_NAME=${INPUT_BASE_FILE_NAME:-$(basename "${GITHUB_REPOSITORY}")}
-TEMPLATE_TEX=${INPUT_TEMPLATE_TEX:-default_template}
+TEMPLATE_TEX=${INPUT_TEX_TEMPLATE:-default_template}
 
 echo "Inputs received:"
 echo "  DOCUMENTS_DIR: ${DOCUMENTS_DIR}"
@@ -139,14 +139,24 @@ if [[ "${PUSH_TO_REPOSITORY}" == "true" ]]; then
     git config --global user.name "github-actions[bot]"
     git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+    echo "--- Debugging Git Status before add ---"
+    ls -lR "${ARTIFACTS_DIR}" || true # list contents, allow failure if dir not there
+    git status
+
     git add "${ARTIFACTS_DIR}"
 
+    echo "--- Debugging Git Status after add ---"
+    git status
+
     if ! git diff --staged --quiet; then
-        git commit -m "chore(action): Generate PDF artifact(s) for ${BASE_FILE_NAME} on ${CURRENT_DATE}"
-        git push
-        echo "Artifacts pushed to repository."
+        echo "No changes detected in artifacts directory to commit."
     else
-        echo "No changes to commit in artifacts directory."
+        git commit -m "chore(action): Generate PDF artifact(s) for ${BASE_FILE_NAME} on ${CURRENT_DATE}"
+        echo "--- Debugging Git Log after commit ---"
+        git log -1
+        REMOTE_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+        git push "${REMOTE_URL}" HEAD:"${GITHUB_REF}"
+        echo "Artifacts pushed to repository."
     fi
 else
     echo "Skipping push to repository as 'push-to-repository' is false."
