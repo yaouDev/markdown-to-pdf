@@ -16,4 +16,5 @@ RUN ls -l /
 # more debug
 RUN head -n 1 /entrypoint.sh | cat -v
 
-ENTRYPOINT ["/entrypoint.sh"]
+# will explicit bash call help..?
+ENTRYPOINT ["bash", "/entrypoint.sh"]
