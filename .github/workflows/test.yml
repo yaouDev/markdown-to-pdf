@@ -47,7 +47,7 @@ jobs:
     
       - name: Run Markdown to PDF Action (Unified PDF)
         id: unified_pdf_run
-        uses: yaouDev/markdown-to-pdf@wip
+        uses: ./
         with:
           documents-dir: documents
           images-dir: images
