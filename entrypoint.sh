@@ -69,7 +69,7 @@ GENERATED_PDF_PATHS=""
 
 if [[ "${UNIFIED_PDF}" == "true" ]]; then
     echo "Compiling all documents into a unified PDF."
-    TMPDIR=/tmp TEMP_MD_FILE=$(mktemp /tmp/combined_docs_XXXX.md)
+    TEMP_MD_FILE=$(TMPDIR=/tmp mktemp combined_docs_XXXX.md)
     for file in "${MD_FILES[@]}"; do
         cat "${file}" >> "${TEMP_MD_FILE}"
         echo -e "\n\n" >> "${TEMP_MD_FILE}" # Add some separation between files - do we want this?
