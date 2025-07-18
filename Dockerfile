@@ -4,7 +4,8 @@ FROM pandoc/latex
 WORKDIR /app
 
 # pandoc/latex uses default shell, but I want bash
-RUN apt-get update && apt-get install -y bash
+# apparently it wants me to use the full path
+RUN /usr/bin/apt-get update && /usr/bin/apt-get install -y bash
 
 COPY entrypoint.sh /entrypoint.sh
 COPY template/ /app/template/
