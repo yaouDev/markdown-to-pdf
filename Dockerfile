@@ -11,10 +11,5 @@ RUN sed -i 's/\r$//' /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh
 
-#debug
-RUN ls -l / 
-# more debug
-RUN head -n 1 /entrypoint.sh | cat -v
-
-# will explicit bash call help..?
-ENTRYPOINT ["bash", "/entrypoint.sh"]
+# it uses default shell doesnt it...
+ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
