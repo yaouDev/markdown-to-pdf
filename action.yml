@@ -1,0 +1,51 @@
+name: 'Markdown to PDF'
+description: 'Converts GitHub Flavored Markdown documents to PDF using Pandoc and LaTeX.'
+author: 'August Jansson / yaouDev'
+
+# entrypoint.sh takes booleans as strings
+
+inputs:
+  documents-dir:
+    description: 'Directory containing the markdown files to convert.'
+    required: false
+    default: 'documents'
+  images-dir:
+    description: 'Directory containing images referenced in markdown files.'
+    required: false
+    default: 'images'
+  artifacts-dir:
+    description: 'Optional: Folder for the GitHub bot to upload PDF artifacts into. Structure: latest PDF, and a "Versions" directory for saved versions.'
+    required: false
+    default: 'artifacts'
+  push-to-repository:
+    description: 'If true, enables GitHub bot configuration to push the PDF artifact to the artifacts directory.'
+    required: false
+    default: 'false'
+  unified-pdf:
+    description: 'If true, compiles all documents into a single PDF; else, one PDF per file.'
+    required: false
+    default: 'true'
+  include-date:
+    description: 'If true, includes the current date (YYYY-MM-DD) into the PDF document name.'
+    required: false
+    default: 'true'
+  save-version:
+    description: 'If true, saves the generated PDF to the artifacts/Versions directory.'
+    required: false
+    default: 'true'
+  base-file-name:
+    description: 'What the base PDF should be called (e.g., "MyDocument"). Defaults to the repository name.'
+    required: false
+    default: ${{ github.event.repository.name }}
+  template-tex:
+    description: 'File path to the custom LaTeX template (.tex) file. Use "default_template" to use the action''s built-in template.'
+    required: false
+    default: 'default_template'
+
+outputs:
+  pdf-path:
+    description: 'The path to the generated PDF file(s).'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
