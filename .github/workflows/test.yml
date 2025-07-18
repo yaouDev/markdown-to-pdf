@@ -53,6 +53,17 @@ jobs:
           base-file-name: MyUnifiedDocument
           template-tex: default_template
 
+      - name: Clean up artifacts_unified directory before re-checkout
+        run: |
+          # Remove the directory created by the action to prevent permission issues
+          # during the subsequent checkout step.
+          if [ -d "artifacts_unified" ]; then
+            rm -rf artifacts_unified
+            echo "Cleaned up artifacts_unified directory."
+          else
+            echo "artifacts_unified directory not found, skipping cleanup."
+          fi
+
       - name: Re-checkout repository to get pushed artifacts
         uses: actions/checkout@v4
         with:
