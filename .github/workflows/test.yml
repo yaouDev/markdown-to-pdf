@@ -53,6 +53,12 @@ jobs:
           base-file-name: MyUnifiedDocument
           template-tex: default_template
 
+      - name: Re-checkout repository to get pushed artifacts
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: .
+
       - name: Verify unified PDF output
         run: |
           echo "Generated PDF path: ${{ steps.unified_pdf_run.outputs.pdf-path }}"
