@@ -69,7 +69,8 @@ GENERATED_PDF_PATHS=""
 
 if [[ "${UNIFIED_PDF}" == "true" ]]; then
     echo "Compiling all documents into a unified PDF."
-    TEMP_MD_FILE=$(TMPDIR=/tmp mktemp combined_docs_XXXX.md)
+    # mktemp is acting up, so ill just make my own
+    TEMP_MD_FILE="/tmp/combined_docs_$(date +%s%N)-$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 8).md"
     for file in "${MD_FILES[@]}"; do
         cat "${file}" >> "${TEMP_MD_FILE}"
         echo -e "\n\n" >> "${TEMP_MD_FILE}" # Add some separation between files - do we want this?
