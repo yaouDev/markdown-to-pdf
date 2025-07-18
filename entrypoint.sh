@@ -159,5 +159,5 @@ else
     echo "Skipping push to repository as 'push-to-repository' is false."
 fi
 
-echo "pdf-path=${GENERATED_PDF_PATHS}" >> "$GITHUB_OUTPUT"
+echo "pdf-path=${GENERATED_PDF_PATHS}" >> "${GITHUB_OUTPUT}"
 echo "Action completed successfully."
