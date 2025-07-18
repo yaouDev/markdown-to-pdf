@@ -1,0 +1,83 @@
+name: Test Markdown to PDF Action
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create dummy documents directory
+        run: |
+          mkdir -p documents
+          echo "# Document One" > documents/01-document-one.md
+          echo "This is the content of document one." >> documents/01-document-one.md
+          echo "## Section 1.1" >> documents/01-document-one.md
+          echo "More text here." >> documents/01-document-one.md
+          echo "# Document Two" > documents/02-document-two.md
+          echo "This is the content of document two." >> documents/02-document-two.md
+          echo "## Section 2.1" >> documents/02-document-two.md
+          echo "More text for document two." >> documents/02-document-two.md
+          ls -R
+
+      - name: Create dummy images directory (optional)
+        run: |
+          mkdir -p images
+          wget https://placehold.co/150x50/png -O images/placeholder.png
+
+      - name: Run Markdown to PDF Action (Unified PDF)
+        id: unified_pdf_run
+        uses: ./ 
+        with:
+          documents-dir: documents
+          images-dir: images
+          artifacts-dir: artifacts_unified
+          push-to-repository: true
+          unified-pdf: true
+          include-date: true
+          save-version: true
+          base-file-name: MyUnifiedDocument
+          template-tex: default_template
+
+      - name: Verify unified PDF output
+        run: |
+          echo "Generated PDF path: ${{ steps.unified_pdf_run.outputs.pdf-path }}"
+          ls -R artifacts_unified
+
+      - name: Clean up for next run (optional, for testing separate PDFs)
+        run: |
+          git restore .
+          rm -rf artifacts_unified
+
+      - name: Run Markdown to PDF Action (Separate PDFs)
+        id: separate_pdf_run
+        uses: ./
+        with:
+          documents-dir: documents
+          images-dir: images
+          artifacts-dir: artifacts_separate
+          push-to-repository: false # Set to false to avoid double push
+          unified-pdf: false
+          include-date: false # Test without date
+          save-version: false # Test without saving version
+          base-file-name: MyDocument # Unused
+          template-tex: default_template
+
+      - name: Verify separate PDF outputs
+        run: |
+          echo "Generated PDF paths: ${{ steps.separate_pdf_run.outputs.pdf-path }}"
+          ls -R artifacts_separate
