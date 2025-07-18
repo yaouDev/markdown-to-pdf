@@ -49,3 +49,14 @@ outputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  # bash doesnt like hypens so we have to explicitly assign them here
+  env:
+    DOCUMENTS_DIR: ${{ inputs.documents-dir }}
+    IMAGES_DIR: ${{ inputs.images-dir }}
+    ARTIFACTS_DIR: ${{ inputs.artifacts-dir }}
+    PUSH_TO_REPOSITORY: ${{ inputs.push-to-repository }}
+    UNIFIED_PDF: ${{ inputs.unified-pdf }}
+    INCLUDE_DATE: ${{ inputs.include-date }}
+    SAVE_VERSION: ${{ inputs.save-version }}
+    BASE_FILE_NAME: ${{ inputs.base-file-name }}
+    TEMPLATE_TEX: ${{ inputs.template-tex }}
