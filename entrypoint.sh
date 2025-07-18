@@ -137,17 +137,13 @@ fi
 
 if [[ "${PUSH_TO_REPOSITORY}" == "true" ]]; then
     echo "Configuring Git and pushing artifacts to repository..."
+    git config --global --add safe.directory /github/workspace
+
     git config --global user.name "github-actions[bot]"
     git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-    echo "--- Debugging Git Status before add ---"
-    ls -lR "${ARTIFACTS_DIR}" || true # list contents, allow failure if dir not there
-    git status
-
+    ls -lR "${ARTIFACTS_DIR}" || true # List contents, allow failure if dir not there
     git add "${ARTIFACTS_DIR}"
-
-    echo "--- Debugging Git Status after add ---"
-    git status
 
     if ! git diff --staged --quiet; then
         echo "No changes detected in artifacts directory to commit."
