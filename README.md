@@ -4,8 +4,6 @@
 
 This GitHub Action converts Markdown documents into professional-looking PDFs using Pandoc and a LaTeX engine. It's designed to be flexible, allowing you to generate a single unified PDF from multiple Markdown files or individual PDFs for each file.
 
-## Contribute
-
 ## ✨ Features
 
 * **Unified PDF Generation:** Combine multiple Markdown files into a single PDF document.
@@ -31,7 +29,6 @@ To use this action, create a `.yml` file (e.g., `generate-docs.yml`) in your rep
 This example demonstrates how to use the action to generate a unified PDF and then upload it as a workflow artifact.
 
 ```yaml
-# .github/workflows/generate-docs.yml
 name: Generate Documentation PDF
 
 on:
@@ -56,8 +53,8 @@ jobs:
           fetch-depth: 0 # Good practice
 
       - name: Generate PDF from Markdown
-        # Replace '@latest' with the version you want to use (e.g, v1.0.0, main, etc.)
-        uses: yaouDev/markdown-to-pdf@latest
+        # Replace '@main' with the version you want to use (e.g, v1.0.0, main, etc.)
+        uses: yaouDev/markdown-to-pdf@main
         id: pdf_generation # Give it an ID to access outputs
         with:
           documents-dir: documents  # Path to your markdown files (e.g., 'documents/')
@@ -114,7 +111,7 @@ This action is compatible with any GitHub Actions workflow running on `ubuntu-la
 
 ## 🤝 Contributing
 
-We welcome and encourage contributions to improve this GitHub Action! Whether it's bug fixes, new features, or documentation improvements, your help is greatly appreciated.
+I welcome and encourage contributions to improve this GitHub Action! Whether it's bug fixes, new features, or documentation improvements, your help is greatly appreciated.
 
 To contribute:
 
