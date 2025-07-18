@@ -3,6 +3,10 @@ FROM pandoc/latex
 
 WORKDIR /app
 
+# pandoc/latex uses default shell, but I want bash
+# im stoopid, pandoc/latex defaults to alpine
+RUN apk update && apk add bash
+
 COPY entrypoint.sh /entrypoint.sh
 COPY template/ /app/template/
 
@@ -11,4 +15,4 @@ RUN sed -i 's/\r$//' /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]

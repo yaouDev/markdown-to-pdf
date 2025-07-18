@@ -1,37 +1,27 @@
 #!/bin/bash
 
 set -euo pipefail
+# debug
+# set -x
 
 echo "Starting Markdown to PDF conversion..."
 
-DOCUMENTS_DIR=${INPUT_DOCUMENTS_DIR:-documents}
-IMAGES_DIR=${INPUT_IMAGES_DIR:-images}
-ARTIFACTS_DIR=${INPUT_ARTIFACTS_DIR:-artifacts}
-PUSH_TO_REPOSITORY=${INPUT_PUSH_TO_REPOSITORY:-false}
-UNIFIED_PDF=${INPUT_UNIFIED_PDF:-true}
-INCLUDE_DATE=${INPUT_INCLUDE_DATE:-true}
-SAVE_VERSION=${INPUT_SAVE_VERSION:-true}
-BASE_FILE_NAME=${INPUT_BASE_FILE_NAME:-$(basename "${GITHUB_REPOSITORY}")}
-TEMPLATE_TEX=${INPUT_TEMPLATE_TEX:-default_template}
+# variable default fallbaks
+DOCUMENTS_DIR="${DOCUMENTS_DIR:-documents}"
+IMAGES_DIR="${IMAGES_DIR:-images}"
+UNIFIED_PDF="${UNIFIED_PDF:-true}"
+INCLUDE_DATE="${INCLUDE_DATE:-true}"
+BASE_FILE_NAME="${BASE_FILE_NAME:-$(basename "${GITHUB_REPOSITORY}")}"
+TEMPLATE_TEX="${TEMPLATE_TEX:-default_template}"
 
-echo "Inputs received:"
-echo "  DOCUMENTS_DIR: ${DOCUMENTS_DIR}"
-echo "  IMAGES_DIR: ${IMAGES_DIR}"
-echo "  ARTIFACTS_DIR: ${ARTIFACTS_DIR}"
-echo "  PUSH_TO_REPOSITORY: ${PUSH_TO_REPOSITORY}"
-echo "  UNIFIED_PDF: ${UNIFIED_PDF}"
-echo "  INCLUDE_DATE: ${INCLUDE_DATE}"
-echo "  SAVE_VERSION: ${SAVE_VERSION}"
-echo "  BASE_FILE_NAME: ${BASE_FILE_NAME}"
-echo "  TEMPLATE_TEX: ${TEMPLATE_TEX}"
-
-mkdir -p "${ARTIFACTS_DIR}/versions"
-echo "Created artifact directories: ${ARTIFACTS_DIR} and ${ARTIFACTS_DIR}/versions"
+mkdir -p "artifacts"
+echo "Created artifacts folder"
 
 TEMPLATE_PATH=""
 if [[ "${TEMPLATE_TEX}" == "default_template" ]]; then
     echo "Using default LaTeX template."
-    TEMPLATE_PATH="/app/template/default.tex" # make sure it's copied into the Dockerfile
+    # make sure the template is copied in the dockerfile
+    TEMPLATE_PATH="/app/template/default.tex"
     if [[ ! -f "${TEMPLATE_PATH}" ]]; then
         echo "Error: Default template not found at ${TEMPLATE_PATH}. Please ensure it's copied into the Docker image."
         exit 1
@@ -39,7 +29,7 @@ if [[ "${TEMPLATE_TEX}" == "default_template" ]]; then
 else
     echo "Using custom LaTeX template: ${TEMPLATE_TEX}"
     if [[ ! -f "${TEMPLATE_TEX}" ]]; then
-        echo "Error: Custom template not found at ${TEMPLATE_TEX}. Please check the path."
+        echo "Error: Custom template not found at "${TEMPLATE_TEX}". Please check the path."
         exit 1
     fi
     TEMPLATE_PATH="${TEMPLATE_TEX}"
@@ -68,14 +58,17 @@ GENERATED_PDF_PATHS=""
 
 if [[ "${UNIFIED_PDF}" == "true" ]]; then
     echo "Compiling all documents into a unified PDF."
-    TEMP_MD_FILE=$(mktemp /tmp/combined_docs_XXXX.md)
+    # mktemp is fighting back, use unique temp folder
+    TEMP_MD_FILE="/tmp/combined_docs_$(date +%s%N)-$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 8).md"
+    touch "${TEMP_MD_FILE}"
+
     for file in "${MD_FILES[@]}"; do
         cat "${file}" >> "${TEMP_MD_FILE}"
-        echo -e "\n\n" >> "${TEMP_MD_FILE}" # Add some separation between files - do we want this?
+        echo -e "\n\n" >> "${TEMP_MD_FILE}" # air
     done
 
     FINAL_PDF_NAME="${BASE_FILE_NAME}${OUTPUT_FILE_SUFFIX}.pdf"
-    OUTPUT_PDF_PATH="${ARTIFACTS_DIR}/${FINAL_PDF_NAME}"
+    OUTPUT_PDF_PATH="artifacts/${FINAL_PDF_NAME}"
 
     echo "Running Pandoc for unified PDF: ${OUTPUT_PDF_PATH}"
     pandoc \
@@ -101,7 +94,7 @@ else
     for file in "${MD_FILES[@]}"; do
         BASENAME=$(basename "${file%.*}")
         FINAL_PDF_NAME="${BASENAME}${OUTPUT_FILE_SUFFIX}.pdf"
-        OUTPUT_PDF_PATH="${ARTIFACTS_DIR}/${FINAL_PDF_NAME}"
+        OUTPUT_PDF_PATH="artifacts/${FINAL_PDF_NAME}"
 
         echo "Running Pandoc for ${file} -> ${OUTPUT_PDF_PATH}"
         pandoc \
@@ -122,33 +115,21 @@ else
     done
 fi
 
-if [[ "${SAVE_VERSION}" == "true" ]]; then
-    echo "Saving versioned PDFs..."
-    for pdf_path in ${GENERATED_PDF_PATHS}; do
-        BASENAME=$(basename "${pdf_path%.*}")
-        VERSIONED_PDF_NAME="${BASENAME}-${CURRENT_DATE}-$(date +%H%M%S).pdf"
-        cp "${pdf_path}" "${ARTIFACTS_DIR}/versions/${VERSIONED_PDF_NAME}"
-        echo "Saved version: ${ARTIFACTS_DIR}/versions/${VERSIONED_PDF_NAME}"
-    done
+
+if [ -z "${GITHUB_OUTPUT}" ]; then
+    echo "Error: GITHUB_OUTPUT environment variable is not set."
+    exit 1
+fi
+if [ ! -f "${GITHUB_OUTPUT}" ]; then
+    echo "Warning: GITHUB_OUTPUT file does not exist. Attempting to create."
+    touch "${GITHUB_OUTPUT}" || { echo "Error: Could not create GITHUB_OUTPUT file."; exit 1; }
+fi
+if [ ! -w "${GITHUB_OUTPUT}" ]; then
+    echo "Error: GITHUB_OUTPUT file is not writable. Permissions: $(ls -l "${GITHUB_OUTPUT}")"
+    exit 1
 fi
 
-if [[ "${PUSH_TO_REPOSITORY}" == "true" ]]; then
-    echo "Configuring Git and pushing artifacts to repository..."
-    git config --global user.name "github-actions[bot]"
-    git config --global user.email "github-actions[bot]@users.noreply.github.com"
+echo "pdf-path=${GENERATED_PDF_PATHS}" >> "${GITHUB_OUTPUT}"
+echo "Successfully set pdf-path output: ${GENERATED_PDF_PATHS}"
 
-    git add "${ARTIFACTS_DIR}"
-
-    if ! git diff --staged --quiet; then
-        git commit -m "chore(action): Generate PDF artifact(s) for ${BASE_FILE_NAME} on ${CURRENT_DATE}"
-        git push
-        echo "Artifacts pushed to repository."
-    else
-        echo "No changes to commit in artifacts directory."
-    fi
-else
-    echo "Skipping push to repository as 'push-to-repository' is false."
-fi
-
-echo "pdf-path=${GENERATED_PDF_PATHS}" >> "$GITHUB_OUTPUT"
 echo "Action completed successfully."
