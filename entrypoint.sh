@@ -102,6 +102,7 @@ else
             -s \
             --from gfm \
             --to pdf \
+            --pdf-engine=xelatex \
             --template "${TEMPLATE_PATH}" \
             --resource-path="${DOCUMENTS_DIR}:${IMAGES_DIR}" \
             -o "${OUTPUT_PDF_PATH}" \
