@@ -107,6 +107,21 @@ jobs:
 
 This action is compatible with any GitHub Actions workflow running on `ubuntu-latest`. It integrates seamlessly with other standard actions, particularly `actions/checkout` and `actions/upload-artifact`. You are also able to configure the GitHub bot to push the artifact/PDF to your repository.
 
+## 📜 Adding a Title Page
+
+In order to add a title page, make sure you have a markdown file at the very top of your documentation folder which is formatted such as the following:
+
+```markdown
+---
+title: "Project Manual"
+author:
+  - John Doe
+subtitle: "Manual for the Project"
+lang: en-US
+keywords: [manual, guide, documentation, how-to]
+---
+```
+
 ## 🤝 Contributing
 
 I welcome and encourage contributions to improve this GitHub Action! Whether it's bug fixes, new features, or documentation improvements, your help is greatly appreciated.
