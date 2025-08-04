@@ -105,6 +105,7 @@ else
             --pdf-engine=xelatex \
             --template "${TEMPLATE_PATH}" \
             --resource-path="${DOCUMENTS_DIR}:${IMAGES_DIR}" \
+            --toc \
             -o "${OUTPUT_PDF_PATH}" \
             "${file}"
 
