@@ -75,9 +75,11 @@ if [[ "${UNIFIED_PDF}" == "true" ]]; then
         -s \
         --from gfm \
         --to pdf \
+        --pdf-engine=xelatex \
         --template "${TEMPLATE_PATH}" \
         --resource-path="${DOCUMENTS_DIR}:${IMAGES_DIR}" \
         --pdf-engine-opt=-shell-escape \
+        --toc \
         -o "${OUTPUT_PDF_PATH}" \
         "${TEMP_MD_FILE}"
 
@@ -105,6 +107,7 @@ else
             --pdf-engine=xelatex \
             --template "${TEMPLATE_PATH}" \
             --resource-path="${DOCUMENTS_DIR}:${IMAGES_DIR}" \
+            --pdf-engine-opt=-shell-escape \
             --toc \
             -o "${OUTPUT_PDF_PATH}" \
             "${file}"
