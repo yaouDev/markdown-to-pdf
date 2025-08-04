@@ -14,8 +14,6 @@ This GitHub Action converts Markdown documents into professional-looking PDFs us
 
 * **Date Inclusion:** Optionally includes the current date in the generated PDF filename.
 
-* **Version Saving:** Can save dated versions of your PDFs for historical tracking.
-
 * **Custom LaTeX Templates:** Use the default built-in LaTeX template or provide your own for full customization.
 
 * **GitHub Artifact Upload:** Designed to work seamlessly with `actions/upload-artifact` to make your generated PDFs easily accessible from your workflow runs.

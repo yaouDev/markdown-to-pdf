@@ -78,14 +78,28 @@ $endif$
 % or delete this 'tocwithfooter' fancypagestyle definition.
 % If you choose to do this, please consider crediting the creator in another way.
 \usepackage{fancyhdr}
-\pagestyle{plain} 
-\fancypagestyle{tocwithfooter}{
+\pagestyle{plain}
+\fancypypagestyle{tocwithfooter}{
     \fancyhf{}
     \fancyfoot[C]{\small Created with yaouDev's \href{https://github.com/yaouDev/markdown-to-pdf}{markdown-to-pdf GitHub Action}}
     \renewcommand{\headrulewidth}{0pt}
     \renewcommand{\footrulewidth}{0.4pt}
 }
 % --- End Custom Footer ---
+
+% --- Pandoc-specific definitions (crucial for \pandocbounded) ---
+% These are typically included in Pandoc's default template.
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{fancyvrb}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Define \pandocbounded to prevent undefined control sequence errors.
+% This is a minimal definition. For full styling of fenced divs,
+% more complex definitions might be needed, often involving packages
+% like 'framed' or 'mdframed' (which you've opted not to install).
+\providecommand{\pandocbounded}[1]{#1}
+% --- End Pandoc-specific definitions ---
+
 
 % Define custom commands/environments from header-includes for markdown
 $if(header-includes)$
