@@ -79,7 +79,6 @@ $endif$
 % If you choose to do this, please consider crediting the creator in another way.
 \usepackage{fancyhdr}
 \pagestyle{plain}
-% The following line has been corrected. \fancypypagestyle was a typo.
 \fancypagestyle{tocwithfooter}{
     \fancyhf{}
     \fancyfoot[C]{\small Created with yaouDev's \href{https://github.com/yaouDev/markdown-to-pdf}{markdown-to-pdf GitHub Action}}
@@ -88,11 +87,13 @@ $endif$
 }
 % --- End Custom Footer ---
 
-% --- Pandoc-specific definitions (crucial for \pandocbounded) ---
+% --- Pandoc-specific definitions ---
+% These are typically included in Pandoc's default template.
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \usepackage{fancyvrb}
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+\newcommand{\pandocbounded}[1]{#1}
 % --- End Pandoc-specific definitions ---
 
 
