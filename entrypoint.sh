@@ -77,6 +77,7 @@ if [[ "${UNIFIED_PDF}" == "true" ]]; then
         --to pdf \
         --template "${TEMPLATE_PATH}" \
         --resource-path="${DOCUMENTS_DIR}:${IMAGES_DIR}" \
+        --pdf-engine-opt=-shell-escape \
         -o "${OUTPUT_PDF_PATH}" \
         "${TEMP_MD_FILE}"
 
