@@ -1,4 +1,4 @@
-name: 'Markdown to PDF'
+name: 'Markdown to PDF using LaTeX'
 description: 'Converts GitHub Flavored Markdown documents to PDF using Pandoc and LaTeX.'
 author: 'August Jansson / yaouDev'
 
